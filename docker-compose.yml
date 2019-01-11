@@ -1,0 +1,24 @@
+version: '3'
+
+networks:
+    db:
+
+services:
+    apache2php:
+        build: .
+        volumes:
+            - ./www:/var/www/html
+        ports:
+            - 80:80
+        networks:
+            - db
+    mysql:
+        image: mariadb:latest
+        volumes:
+            - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./conf/docker.cnf:/etc/mysql/conf.d/docker.cnf
+            - ./conf/my.cnf:/etc/mysql/my.cnf
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+        networks:
+            - db
